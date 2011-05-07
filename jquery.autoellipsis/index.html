@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>jquery.autoellipsis</title>
+
+        <link href="/css/theme.css" rel="stylesheet" type="text/css">
+        <link href="/css/jquery.autoellipsis.css" rel="stylesheet" type="text/css">
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.autoellipsis-1.0.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.jgfeed-min.js"></script>
+    </head>
+
+    <body>
+        <div class="header">
+            <div>
+                <h1>jquery.autoellipsis <span>An ellipsis plugin for jQuery</span></h1>
+            </div>
+        </div>
+
+        <div class="content">
+            <div>
+                <div class="tools">
+                    <em>Like this? Please share:</em>
+
+                    <span class="twitter">
+                        <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+                    </span>
+                </div>
+
+                <p>
+                    jquery.autoellipsis is a jQuery plugin for automatically applying ellipsis on selected elements. This
+                    plugin optimally uses the available space, unlike methods like character counting. 
+                </p>
+
+                <h2>Download</h2>
+
+                <p>
+                    The latest version of the jquery.autoellipsis library can be downloaded from here:
+                </p>
+
+                <div class="downloads">
+                    <ul>
+                        <li><a href="/downloads/jquery.autoellipsis-1.0.js">jquery.autoellipsis-1.0.js</a> <span>SHA-1 sum: 932c0ef7f16816c3f1287bc12998b3fce011fac0</span></li>
+                        <li><a href="/downloads/jquery.autoellipsis-1.0.min.js">jquery.autoellipsis-1.0.min.js</a> <span>SHA-1 sum: 087aea5c22d3fea9b8f5248e196a74e0bab533ba</span></li>
+                    </ul>
+                </div>
+
+                <h2>License</h2>
+
+                <p>
+                    <a href="http://github.com/pvdspek/jquery.autoellipsis">jquery.autoellipsis</a> is available on
+                    <a href="http://github.com/pvdspek/jquery.autoellipsis">GitHub</a> under
+                    <a href="http://github.com/pvdspek/jquery.autoellipsis/blob/master/MIT-LICENSE.txt">MIT license</a>.
+                </p>
+
+                <h2>How to use</h2>
+
+                <div class="usage">
+                    <div class="method">
+                        <div class="returns">
+                            Returns: <a href="http://api.jquery.com/Types/#jQuery" target="_blank">jQuery</a>
+                        </div>
+                        .ellipsis( [selector], [options] )
+                    </div>
+
+                    <div class="description">Perform ellipsis on jQuery selection. The optional selector defines the sub-elements
+                        which will be affected by the ellipsis operation.
+                    </div>
+
+                    <div class="arguments">
+                        <div>
+                            <strong>selector</strong> The selector selecting the sub-elements to perform ellipsis on. If no selector
+                            is given, the plugin defaults to performing ellipsis on all child elements.
+                        </div>
+
+                        <div>
+                            <strong>options</strong> A map of additional options to pass to the method. Supported are:
+                            <ul>
+                                <li><strong>ellipsis</strong> The ellipsis character or string to use. Defaults to "..." (three dots).</li>
+                                <li><strong>setTitle</strong> Sets the <code>title</code> attribute of the affected elements
+                                    with the original content. May be set to either <code>never</code>, <code>onEllipsis</code>
+                                    or <code>always</code>. When using <code>onEllipsis</code>, the <code>title</code> attribute
+                                    will only be set when the content of the element was indeed ellipsed. Defaults to
+                                    <code>never</code>.</li>
+                                <li><strong>live</strong> When set to <code>true</code>, perform ellipsis on current and
+                                    future elements matching the jQuery selection. Also reapplies the ellipsis when the
+                                    target elements' dimensions change. Use with care, as this mode polls the selection
+                                    elements. Defaults to <code>false</code>.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div>The method returns the <code>jQuery</code> object for chaining purposes.</div>
+                </div>
+
+                <div class="clear"></div>
+
+                <h2>Example</h2>
+
+                <div class="rss-example">
+                    <div class="header">New York Times RSS feed</div>
+                    <ul id="nyt-feed"></ul>
+                </div>
+
+                <p>
+                    The example code below shows how to use the ellipsis plugin. It uses <a href="http://plugins.jquery.com/project/jgfeed" target="_blank">jGFeed</a>
+                    to retrieve the Global News RSS feed from the <a href="http://www.nytimes.com/" target="_blank">New York Times</a>.
+                </p>
+
+                <p>
+                    The feed items are rendered in fixed-height blocks, after which the ellipsis is applied. Using the default <code>.ellipsis()</code>
+                    call with no arguments, the ellipsis method works on all sub-elements.
+                </p>
+
+                <div class="pre">
+                    <pre>
+(function($) {
+    $(document).ready(function() {
+        $.jGFeed('http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml',
+                function(feeds) {
+                    if (feeds) {
+                        for (var i = 0, ii = feeds.entries.length; i &lt; ii; i++) {
+                            var entry = feeds.entries[i];
+
+                            $('#nyt-feed').append('&lt;li&gt;&lt;span class="title"&gt;' + entry.title + '&lt;/span&gt;&lt;span class="description"&gt;' + entry.content + '&lt;/span&gt;&lt;/li&gt;');
+                        }
+
+                        $('#nyt-feed li').ellipsis();
+                    };
+                },
+                5);
+
+    });
+})(jQuery);
+                    </pre>
+                </div>
+
+                <div class="clear"></div>
+
+                <script type="text/javascript">
+                    (function($) {
+                        $(document).ready(function() {
+                            $.jGFeed('http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml',
+                                    function(feeds) {
+                                        if (feeds) {
+                                            for (var i = 0, ii = feeds.entries.length; i < ii; i++) {
+                                                var entry = feeds.entries[i];
+
+                                                $('#nyt-feed').append('<li><span class="title">' + entry.title + '</span><span class="description">' + entry.content + '</span></li>');
+                                            }
+
+                                            $('#nyt-feed li').ellipsis();
+                                        };
+                                    },
+                                    5);
+
+                        });
+                    })(jQuery);
+                </script>
+            </div>
+        </div>
+
+        <div class="github-ribbon">
+            <a href="http://github.com/pvdspek/jquery.autoellipsis"><img src="https://d3nwyuy0nl342s.cloudfront.net/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
+        </div>
+    </body>
+</html>

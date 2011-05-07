@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'), url('http://themes.googleusercontent.com/font?kit=kcf5uOXucLcbFOydGU24WALUuEpTyoUstqEm5AMlJo4') format('woff');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url('http://themes.googleusercontent.com/font?kit=qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA') format('woff');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Lato Italic'), local('Lato-Italic'), url('http://themes.googleusercontent.com/font?kit=RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A') format('woff');
+}
+@font-face {
+  font-family: 'Cardo';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Cardo'), url('http://themes.googleusercontent.com/font?kit=c6Zi_ulq7hv-avk-G9Yut6CWcynf_cDxXwCLxiixG1c') format('woff');
+}
+
+body { margin: 0; }
+.header { background-color: #8b0000; }
+ .header div { width: 960px; margin: 0 auto; padding: 8px 0; }
+ .header h1 { color: #fff; }
+  .header h1 span { color: #000; font-size: 0.8em; font-weight: 300;}
+
+h1, h2, code { font-family: 'Lato', arial, serif; font-weight: 400; }
+h1 { font-size: 2em; margin: 8px 0; }
+h2 { font-size: 1.6em; margin: 8px 0; }
+p { font-family: 'Cardo', serif; font-size: 1.2em; line-height: 1.2em; }
+ p code { font-size: 0.8em; }
+ul { list-style-type: square; font-family: 'Cardo', serif; }
+a { color: #000; }
+pre { overflow: auto; margin: 0; }
+
+.clear { clear: both; }
+
+.content { margin-bottom: 20px; }
+ .content >div { width: 960px; margin: 0 auto; }
+
+.tools { margin: 16px 0 24px 0; font-family: 'Lato', arial, serif; font-weight: 300; font-size: 0.8em; color: #888; }
+ .tools em { vertical-align: middle; padding-right: 1em; }
+  .tools span.twitter iframe { vertical-align: middle; }
+
+.downloads {}
+ .downloads ul { font-size: 1.2em; }
+ .downloads a { color: #000; }
+   .downloads ul li span { font-family: 'Lato', arial, serif; font-weight: 300; font-size: 0.8em; color: #888; }
+
+.usage { background-color: #eee; border-radius: 4px; -webkit-border-radius: 4px; font-family: 'Lato', arial, serif; font-weight: 300; margin-bottom: 20px; }
+ .usage div { padding: 0 8px 8px 8px; }
+ .usage .method { background-color: #8b0000; font-weight: 400; color: #fff; padding: 8px; border-radius: 4px 4px 0 0; -webkit-border-radius: 4px 4px 0 0; }
+  .usage .method .returns { float: right; }
+  .usage .method a { color: #fff; }
+  .usage .description { font-family: 'Lato', serif; font-style: italic; font-size: 1em; padding: 12px 8px; }
+  .usage .arguments { padding: 0; }
+   .usage .arguments div { margin: 0 0 0 80px; }
+   .usage .arguments div:first-child { padding-top: 8px; }
+    .usage .arguments div >strong { font-weight: 400; display: block; float: left; margin-left: -80px; }
+   .usage .arguments ul { font-family: 'Lato', arial, serif; -webkit-margin-before: 0.5em; -webkit-margin-after: 0.5em; -webkit-padding-start: 0; list-style-type: none; }
+    .usage .arguments li { display: block; margin: 0 0 4px 80px; }
+    .usage .arguments li >strong { font-weight: 400; display: block; float: left; margin-left: -80px; }
+ .usage code { font-size: 1em; }
+
+.pre { border-radius: 4px; -webkit-border-radius: 4px; padding: 4px; background-color: #eee; width: 640px; }
+ .pre pre { padding: 0; font-size: 0.9em; }
+
+.github-ribbon { position: absolute; top: 0; right: 0; }
+ .github-ribbon a { border: 0; }

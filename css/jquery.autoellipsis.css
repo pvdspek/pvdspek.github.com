@@ -1,0 +1,7 @@
+.rss-example { background-color: #eee; border-radius: 4px; -webkit-border-radius: 4px; font-family: 'Lato', arial, serif; font-weight: 300; float: right; width: 300px; margin: 0 0 20px 16px; }
+ .rss-example .header { background-color: #8b0000; font-weight: 400; color: #fff; padding: 8px; border-radius: 4px 4px 0 0; -webkit-border-radius: 4px 4px 0 0; }
+ .rss-example ul { font-family: 'Lato', arial, serif; -webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-padding-start: 0; list-style-type: none; padding: 8px;  }
+  .rss-example li { display: block; margin: 0 0 4px 0; height: 80px; overflow: hidden; border-top: 1px solid #888; padding-top: 8px; }
+   .rss-example li:first-child { border-top: none; padding-top: 0; }
+   .rss-example li span.title { font-weight: 400; margin-right: 8px; }
+   .rss-example li span.description {}
