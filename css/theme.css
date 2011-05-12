@@ -2,25 +2,29 @@
   font-family: 'Lato';
   font-style: normal;
   font-weight: 300;
-  src: local('Lato Light'), local('Lato-Light'), url('http://themes.googleusercontent.com/font?kit=kcf5uOXucLcbFOydGU24WALUuEpTyoUstqEm5AMlJo4') format('woff');
+  src: url('http://themes.googleusercontent.com/font?kit=zLhfkPOm_5ykmdm-wXaiuw');
+  src: local('Lato Light'), local('Lato-Light'), url('http://themes.googleusercontent.com/font?kit=KT3KS9Aol4WfR6Vas8kNcg') format('woff');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 300;
+  src: url('http://themes.googleusercontent.com/font?kit=2HG_tEPiQ4Z6795cGfdivPY6323mHUZFJMgTvxaG2iE');
+  src: local('Lato Light Italic'), local('Lato-LightItalic'), url('http://themes.googleusercontent.com/font?kit=2HG_tEPiQ4Z6795cGfdivD8E0i7KZn-EPnyo3HZu7kw') format('woff');
 }
 @font-face {
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url('http://themes.googleusercontent.com/font?kit=qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA') format('woff');
-}
-@font-face {
-  font-family: 'Lato';
-  font-style: italic;
-  font-weight: 400;
-  src: local('Lato Italic'), local('Lato-Italic'), url('http://themes.googleusercontent.com/font?kit=RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A') format('woff');
+  src: url('http://themes.googleusercontent.com/font?kit=nQhiC-wSiJx0pvEuJl8d8A');
+  src: local('Lato Regular'), local('Lato-Regular'), url('http://themes.googleusercontent.com/font?kit=9k-RPmcnxYEPm8CNFsH2gg') format('woff');
 }
 @font-face {
   font-family: 'Cardo';
   font-style: normal;
   font-weight: normal;
-  src: local('Cardo'), url('http://themes.googleusercontent.com/font?kit=c6Zi_ulq7hv-avk-G9Yut6CWcynf_cDxXwCLxiixG1c') format('woff');
+  src: url('http://themes.googleusercontent.com/font?kit=WLga5RBcBwOgQwbtYXsULg');
+  src: local('Cardo'), url('http://themes.googleusercontent.com/font?kit=zpisC4kGu76S5N9VhpMnEg') format('woff');
 }
 
 body { margin: 0; }
@@ -67,8 +71,8 @@ pre { overflow: auto; margin: 0; }
     .usage .arguments li >strong { font-weight: 400; display: block; float: left; margin-left: -80px; }
  .usage code { font-size: 1em; }
 
-.pre { border-radius: 4px; -webkit-border-radius: 4px; padding: 4px; background-color: #eee; width: 640px; }
+.pre { border-radius: 4px; -webkit-border-radius: 4px; padding: 4px; background-color: #eee; width: 630px; }
  .pre pre { padding: 0; font-size: 0.9em; }
 
 .github-ribbon { position: absolute; top: 0; right: 0; }
- .github-ribbon a { border: 0; }
+ .github-ribbon a img { border: 0; }
