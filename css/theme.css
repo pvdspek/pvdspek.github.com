@@ -65,10 +65,10 @@ pre { overflow: auto; margin: 0; }
   .usage .arguments { padding: 0; }
    .usage .arguments div { margin: 0 0 0 80px; }
    .usage .arguments div:first-child { padding-top: 8px; }
-    .usage .arguments div >strong { font-weight: 400; display: block; float: left; margin-left: -80px; }
+    .usage .arguments div >strong { font-weight: 400; display: block; float: left; width: 80px; margin-left: -80px; }
    .usage .arguments ul { font-family: 'Lato', arial, serif; -webkit-margin-before: 0.5em; -webkit-margin-after: 0.5em; -webkit-padding-start: 0; list-style-type: none; }
     .usage .arguments li { display: block; margin: 0 0 4px 80px; }
-    .usage .arguments li >strong { font-weight: 400; display: block; float: left; margin-left: -80px; }
+    .usage .arguments li >strong { font-weight: 400; display: block; float: left; width: 80px; margin-left: -80px; }
  .usage code { font-size: 1em; }
 
 .pre { border-radius: 4px; -webkit-border-radius: 4px; padding: 4px; background-color: #eee; width: 630px; }
