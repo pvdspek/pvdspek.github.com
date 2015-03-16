@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .aiv-box { border: 1px solid #ccc; border-radius: 4px; padding: 0 10px; }
+        .aiv-reference-box { position: relative; margin-bottom: 10px; }
+        .aiv-reference-box-landscape { }
+        .aiv-reference-source-image img { width: 100%; }
+        .aiv-crop-overlay { position: absolute; width: 100%; height: 80%; border: 1px dashed #fff; cursor: move; }
+        .aiv-crop-resize { position: absolute; width: 11px; height: 11px; background-color: #fff; border: 1px solid #666; -moz-border-radius: 6px; border-radius: 6px; }
+        .aiv-crop-resize-nw { top: -6px; left: -6px; cursor: nwse-resize; }
+        .aiv-crop-resize-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+        .aiv-crop-resize-sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+        .aiv-crop-resize-se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+        body.aiv-crop-moving * { cursor: move !important; }
+        body.aiv-crop-resizing-nw * { cursor: nwse-resize !important; }
+        body.aiv-crop-resizing-ne * { cursor: nesw-resize !important; }
+        body.aiv-crop-resizing-sw * { cursor: nesw-resize !important; }
+        body.aiv-crop-resizing-se * { cursor: nwse-resize !important; }
+        .aiv-version { border: 1px solid #ccc; -moz-border-radius: 4px; border-radius: 4px; padding: 10px; }
+        .aiv-version-overflow-container { overflow: hidden; }
+        .aiv-version-overflow-warning { display: none; margin: 10px 0 0 0; }
+        .aiv-version-overflow-warning.aiv-version-overflow-warning-active { display: block; }
+        .aiv-version-box { position: relative; overflow: hidden; margin: 0 auto; }
+        .aiv-version-box img { position: absolute; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Auto image versions</h1>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Fixed settings</h4>
+                <p>The landscape and portrait aspect ratios are chosen when auto image sizing is set up. It cannot be changed once set up. In this demo however, you can test with different initial aspect ratios.</p>
+                <form id="aspect-ratios-form" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="landscape-aspect-ratio" class="col-md-3 control-label">Landscape aspect ratio</label>
+                        <div class="col-md-2">
+                            <div class="input-group input-group-sm">
+                                <input id="landscape-aspect-ratio" type="number" class="form-control" value="1.8" />
+                                <span class="input-group-addon">: 1</span>
+                            </div>
+                        </div>
+                        <label for="portrait-aspect-ratio" class="col-md-3 control-label">Portrait aspect ratio</label>
+                        <div class="col-md-2">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon">1 : </span>
+                                <input id="portrait-aspect-ratio" type="number" class="form-control" value="1.8" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            <button type="button" id="aspect-ratios-update" class="btn btn-primary">Update aspect ratios</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Auto image sizing test</h4>
+                <p>Select a source image below and then adjust the landscape, square and portrait crops. Finally select the required output image version and verify the result.</p>
+                <form id="source-image-selector-form" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="source-image-selector" class="col-md-3 control-label">Source image</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" id="source-image-selector-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caption">Landscape image</span> <span class="caret"></span></button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#" data-source="1600x800">Wide landscape image</a></li>
+                                        <li><a href="#" data-source="1200x800">Landscape image</a></li>
+                                        <li><a href="#" data-source="1000x800">Narrow landscape image</a></li>
+                                        <li><a href="#" data-source="800x800">Square image</a></li>
+                                        <li><a href="#" data-source="800x1000">Short portrait image</a></li>
+                                        <li><a href="#" data-source="800x1200">Portrait image</a></li>
+                                        <li><a href="#" data-source="800x1600">Tall portrait image</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Custom image URL</a></li>
+                                    </ul>
+                                </div>
+                                <input id="source-image-selector" type="text" class="form-control" value="http://lorempixel.com/1200/800/" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            <button type="button" id="source-image-selector-refresh" class="btn btn-primary">Refresh source image</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="aiv-box">
+                    <h4>Landscape crop</h4>
+                    <div class="aiv-reference-box aiv-reference-box-landscape">
+                        <div class="aiv-reference-source-image">
+                            <div class="aiv-crop-overlay">
+                                <div class="aiv-crop-resize aiv-crop-resize-nw"></div>
+                                <div class="aiv-crop-resize aiv-crop-resize-ne"></div>
+                                <div class="aiv-crop-resize aiv-crop-resize-sw"></div>
+                                <div class="aiv-crop-resize aiv-crop-resize-se"></div>
+                            </div>
+                            <img src="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="aiv-box">
+                    <h4>Square crop</h4>
+                    <div class="aiv-reference-box aiv-reference-box-square">
+                        <div class="aiv-reference-source-image">
+                            <div class="aiv-crop-overlay">
+                                <div class="aiv-crop-resize aiv-crop-resize-nw"></div>
+                                <div class="aiv-crop-resize aiv-crop-resize-ne"></div>
+                                <div class="aiv-crop-resize aiv-crop-resize-sw"></div>
+                                <div class="aiv-crop-resize aiv-crop-resize-se"></div>
+                            </div>
+                            <img src="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="aiv-box">
+                    <h4>Portrait crop</h4>
+                    <div class="aiv-reference-box aiv-reference-box-portrait">
+                        <div class="aiv-reference-source-image">
+                            <div class="aiv-crop-overlay">
+                                <div class="aiv-crop-resize aiv-crop-resize-nw"></div>
+                                <div class="aiv-crop-resize aiv-crop-resize-ne"></div>
+                                <div class="aiv-crop-resize aiv-crop-resize-sw"></div>
+                                <div class="aiv-crop-resize aiv-crop-resize-se"></div>
+                            </div>
+                            <img src="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="row">
+            <div class="col-md-12">
+                <form id="image-version-selector-form" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="image-version-selector-button" class="col-md-3 control-label">Source image</label>
+                        <div class="btn-group col-md-5">
+                            <button type="button" id="image-version-selector-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caption">600 * 342px</span> <span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" data-size="900x342">900 * 342px</a></li>
+                                <li><a href="#" data-size="600x342">600 * 342px</a></li>
+                                <li><a href="#" data-size="300x342">300 * 342px</a></li>
+                                <li><a href="#" data-size="300x300">300 * 300px</a></li>
+                                <li><a href="#" data-size="300x450">300 * 450px</a></li>
+                                <li><a href="#" data-size="200x450">200 * 450px</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Custom size</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="image-version-width" class="col-md-3 control-label">Width</label>
+                        <div class="col-md-2">
+                            <input type="number" id="image-version-width" class="form-control" value="600" disabled="disabled" />
+                        </div>
+                        <label for="image-version-height" class="col-md-1 control-label">Height</label>
+                        <div class="col-md-2">
+                            <input type="number" id="image-version-height" class="form-control" value="342" disabled="disabled" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            <button type="button" id="image-version-selector-generate" class="btn btn-primary">Generate image version</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="aiv-version">
+                    <div class="aiv-version-overflow-container">
+                        <div class="aiv-version-box">
+                            <img src="" />
+                        </div>
+                        <div class="alert alert-warning aiv-version-overflow-warning" role="alert">
+                            <strong>Warning</strong> The resulting image version is too large to display. It was clipped to make it fit.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p>&nbsp;</p>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        (function() {
+            var landscapeAspectRatio = 1.8, portraitAspectRatio = 1 / 1.8;
+            var imagesLoading = 0;
+
+            var crops = {
+                landscape: {},
+                square: {},
+                portrait: {}
+            };
+
+            var toPixelSpace = function(percentageSpace, pixelSpace, referenceBoxWidth, referenceBoxHeight) {
+                pixelSpace.width = percentageSpace.width * referenceBoxWidth;
+                pixelSpace.height = percentageSpace.height * referenceBoxHeight;
+                pixelSpace.left = percentageSpace.left * referenceBoxWidth;
+                pixelSpace.top = percentageSpace.top * referenceBoxHeight;
+            };
+
+            var toPercentageSpace = function(pixelSpace, percentageSpace, referenceBoxWidth, referenceBoxHeight) {
+                percentageSpace.width = pixelSpace.width / referenceBoxWidth;
+                percentageSpace.height = pixelSpace.height / referenceBoxHeight;
+                percentageSpace.left = pixelSpace.left / referenceBoxWidth;
+                percentageSpace.top = pixelSpace.top / referenceBoxHeight;
+            };
+
+            var repaint = function($referenceBox, crop) {
+                $referenceBox.find('.aiv-crop-overlay').css({
+                    width: '' + (Math.round(crop.width * 10000) / 100) + '%',
+                    height: '' + (Math.round(crop.height * 10000) / 100) + '%',
+                    top: '' + (Math.round(crop.top * 10000) / 100) + '%',
+                    left: '' + (Math.round(crop.left * 10000) / 100) + '%'
+                });
+            };
+
+            var resetCrops = function() {
+                $('.aiv-reference-box').each(function() {
+                    var $referenceBox = $(this);
+                    var referenceBoxWidth = $referenceBox.width();
+                    var referenceBoxHeight = $referenceBox.height();
+                    var referenceBoxAspectRatio = referenceBoxWidth / referenceBoxHeight;
+
+                    var crop, pixelCrop, aspectRatio;
+
+                    if ($referenceBox.is('.aiv-reference-box-landscape')) {
+                        crop = crops.landscape;
+                        aspectRatio = landscapeAspectRatio;
+                    } else if ($referenceBox.is('.aiv-reference-box-square')) {
+                        crop = crops.square;
+                        aspectRatio = 1;
+                    } else if ($referenceBox.is('.aiv-reference-box-portrait')) {
+                        crop = crops.portrait;
+                        aspectRatio = portraitAspectRatio;
+                    }
+
+                    if (crop) {
+                        crop.referenceBox = {
+                            width: referenceBoxWidth,
+                            height: referenceBoxHeight
+                        };
+
+                        if (aspectRatio >= referenceBoxAspectRatio) {
+                            crop.pixelCrop = {
+                                width: referenceBoxWidth,
+                                height: referenceBoxWidth / aspectRatio,
+                                left: 0,
+                                top: (referenceBoxHeight - (referenceBoxWidth / aspectRatio)) / 2
+                            };
+                        } else {
+                            crop.pixelCrop = {
+                                width: referenceBoxHeight * aspectRatio,
+                                height: referenceBoxHeight,
+                                left: (referenceBoxWidth - (referenceBoxHeight * aspectRatio)) / 2,
+                                top: 0
+                            };
+                        }
+
+                        crop.pixelCrop.centerLeft = crop.pixelCrop.left + (crop.pixelCrop.width / 2);
+                        crop.pixelCrop.centerTop = crop.pixelCrop.top + (crop.pixelCrop.height / 2);
+
+                        crop.percentageCrop = crop.percentageCrop || {};
+
+                        toPercentageSpace(crop.pixelCrop, crop.percentageCrop, crop.referenceBox.width, crop.referenceBox.height);
+                        repaint($referenceBox, crop.percentageCrop);
+                    }
+                });
+            };
+
+            var generateImageVersion = function() {
+                var imageVersionWidth = $('#image-version-width').val();
+                var imageVersionHeight = $('#image-version-height').val();
+
+                var imageVersionAspectRatio = imageVersionWidth / imageVersionHeight;
+
+                var landscapeOrPortraitCrop, landscapeOrPortraitAspectRatio;
+
+                if (imageVersionAspectRatio > 1) {
+                    landscapeOrPortraitCrop = crops.landscape;
+                    landscapeOrPortraitAspectRatio = landscapeAspectRatio;
+
+                } else {
+                    landscapeOrPortraitCrop = crops.portrait;
+                    landscapeOrPortraitAspectRatio = portraitAspectRatio;
+                }
+
+                var interpolationFactor = (imageVersionAspectRatio - 1) / (landscapeOrPortraitAspectRatio - 1);
+
+                var interpolatedImageVersion = {
+                    width: crops.square.pixelCrop.width + (Math.min(interpolationFactor, 1) * (landscapeOrPortraitCrop.pixelCrop.width - crops.square.pixelCrop.width)),
+                    height: crops.square.pixelCrop.height + (Math.min(interpolationFactor, 1) * (landscapeOrPortraitCrop.pixelCrop.height - crops.square.pixelCrop.height)),
+                    centerLeft: crops.square.pixelCrop.centerLeft + (Math.min(interpolationFactor, 1) * (landscapeOrPortraitCrop.pixelCrop.centerLeft - crops.square.pixelCrop.centerLeft)),
+                    centerTop: crops.square.pixelCrop.centerTop + (Math.min(interpolationFactor, 1) * (landscapeOrPortraitCrop.pixelCrop.centerTop - crops.square.pixelCrop.centerTop))
+                };
+
+                if (imageVersionAspectRatio > 1) {
+                    if (interpolationFactor > 1) {
+                        interpolatedImageVersion.width = interpolatedImageVersion.height * imageVersionAspectRatio;
+                    } else {
+                        interpolatedImageVersion.height = interpolatedImageVersion.width / imageVersionAspectRatio;
+                    }
+                } else {
+                    if (interpolationFactor > 1) {
+                        interpolatedImageVersion.height = interpolatedImageVersion.width / imageVersionAspectRatio;
+                    } else {
+                        interpolatedImageVersion.width = interpolatedImageVersion.height * imageVersionAspectRatio;
+                    }
+                }
+
+                interpolatedImageVersion.left = interpolatedImageVersion.centerLeft - (interpolatedImageVersion.width / 2);
+                interpolatedImageVersion.top = interpolatedImageVersion.centerTop - (interpolatedImageVersion.height / 2);
+
+                if (interpolatedImageVersion.width > landscapeOrPortraitCrop.referenceBox.width) {
+                    interpolatedImageVersion.width = landscapeOrPortraitCrop.referenceBox.width;
+                    interpolatedImageVersion.height = interpolatedImageVersion.width / imageVersionAspectRatio;
+                    interpolatedImageVersion.left = 0;
+                    interpolatedImageVersion.top = interpolatedImageVersion.centerTop - (interpolatedImageVersion.height / 2);
+                }
+
+                if (interpolatedImageVersion.height > landscapeOrPortraitCrop.referenceBox.height) {
+                    interpolatedImageVersion.height = landscapeOrPortraitCrop.referenceBox.height;
+                    interpolatedImageVersion.width = interpolatedImageVersion.height * imageVersionAspectRatio;
+                    interpolatedImageVersion.left = interpolatedImageVersion.centerLeft - (interpolatedImageVersion.width / 2);
+                    interpolatedImageVersion.top = 0;
+                }
+
+                if (interpolatedImageVersion.left < 0) {
+                    interpolatedImageVersion.left = 0;
+                } else if (interpolatedImageVersion.left + interpolatedImageVersion.width > landscapeOrPortraitCrop.referenceBox.width) {
+                    interpolatedImageVersion.left = landscapeOrPortraitCrop.referenceBox.width - interpolatedImageVersion.width;
+                }
+
+                if (interpolatedImageVersion.top < 0) {
+                    interpolatedImageVersion.top = 0;
+                } else if (interpolatedImageVersion.top + interpolatedImageVersion.height > landscapeOrPortraitCrop.referenceBox.height) {
+                    interpolatedImageVersion.top = landscapeOrPortraitCrop.referenceBox.height - interpolatedImageVersion.height;
+                }
+
+                interpolatedImageVersion.centerLeft = interpolatedImageVersion.left + (interpolatedImageVersion.width / 2);
+                interpolatedImageVersion.centerTop = interpolatedImageVersion.top + (interpolatedImageVersion.height / 2);
+
+                var resultingImageVersionScale = Math.max(imageVersionWidth / interpolatedImageVersion.width, imageVersionHeight / interpolatedImageVersion.height);
+
+                var resultingImageVersion = {
+                    width: resultingImageVersionScale * landscapeOrPortraitCrop.referenceBox.width,
+                    height: resultingImageVersionScale * landscapeOrPortraitCrop.referenceBox.height,
+                    cropWidth: resultingImageVersionScale * interpolatedImageVersion.width,
+                    cropHeight: resultingImageVersionScale * interpolatedImageVersion.height,
+                    cropLeft: resultingImageVersionScale * interpolatedImageVersion.left,
+                    cropTop: resultingImageVersionScale * interpolatedImageVersion.top
+                };
+
+                $('.aiv-version-box').css({
+                    width: Math.round(resultingImageVersion.cropWidth) + 'px',
+                    height: Math.round(resultingImageVersion.cropHeight) + 'px'
+                }).find('img').css({
+                    width: Math.round(resultingImageVersion.width) + 'px',
+                    height: Math.round(resultingImageVersion.height) + 'px',
+                    left: Math.round(-1 * resultingImageVersion.cropLeft) + 'px',
+                    top: Math.round(-1 * resultingImageVersion.cropTop) + 'px'
+                });
+
+                checkOverflow();
+            };
+
+            var checkOverflow = function() {
+                if (($('.aiv-version-overflow-container').height() < $('.aiv-version-box').height()) ||
+                        ($('.aiv-version-overflow-container').width() < $('.aiv-version-box').width())) {
+                    $('.aiv-version-overflow-warning').addClass('aiv-version-overflow-warning-active');
+                } else {
+                    $('.aiv-version-overflow-warning').removeClass('aiv-version-overflow-warning-active');
+                }
+            };
+
+            $(window).resize(function() {
+                checkOverflow();
+            });
+
+            $('.aiv-reference-box img, .aiv-version-box img').bind('load', function() {
+                imagesLoading--;
+
+                if (imagesLoading == 0) {
+                    resetCrops();
+                    generateImageVersion();
+                }
+            });
+
+            $('#aspect-ratios-form input').focus(function() {
+                $('#aspect-ratios-form .alert').remove();
+            });
+
+            $('#aspect-ratios-update').click(function() {
+                if ($.isNumeric($('#landscape-aspect-ratio').val()) && ($('#landscape-aspect-ratio').val() > 1) &&
+                        $.isNumeric($('#portrait-aspect-ratio').val()) && ($('#portrait-aspect-ratio').val() > 1)) {
+                    landscapeAspectRatio = $('#landscape-aspect-ratio').val();
+                    portraitAspectRatio = 1 / $('#portrait-aspect-ratio').val();
+                    resetCrops();
+                    generateImageVersion();
+                } else {
+                    $('#aspect-ratios-form').append('<div class="alert alert-danger" role="alert">Invalid aspect ratio</div>');
+                }
+            });
+
+            $('#source-image-selector-button').each(function () {
+                var $button = $(this);
+
+                $button.find('~ ul a').click(function (event) {
+                    event.preventDefault();
+
+                    var $link = $(this);
+
+                    $button.find('.caption').text($link.text());
+                    if ($link.data('source')) {
+                        $('#source-image-selector').attr('disabled', 'disabled').val('http://lorempixel.com/' + $link.data('source').split('x')[0] + '/' + $link.data('source').split('x')[1] + '/');
+                    } else {
+                        $('#source-image-selector').removeAttr('disabled').val('');
+                    }
+                });
+            });
+
+            $('#source-image-selector-refresh').click(function () {
+                imagesLoading = $('.aiv-reference-source-image img, .aiv-version-box img').length;
+                $('.aiv-reference-source-image img, .aiv-version-box img').attr('src', $('#source-image-selector').val() + '?t=' + Math.floor(Math.random() * 100000));
+            });
+
+            $('.aiv-reference-box').each(function() {
+                var $referenceBox = $(this);
+                var referenceBoxOffset, referenceBoxWidth, referenceBoxHeight, referenceBoxAspectRatio;
+                var isMoving = false, isResizing = false, resizeCorner;
+                var pointerOffsetX, pointerOffsetY;
+                var minCropSize = 50;
+
+                var crop, aspectRatio;
+
+                if ($referenceBox.is('.aiv-reference-box-landscape')) {
+                    crop = crops.landscape;
+                    aspectRatio = landscapeAspectRatio;
+                } else if ($referenceBox.is('.aiv-reference-box-square')) {
+                    crop = crops.square;
+                    aspectRatio = 1;
+                } else if ($referenceBox.is('.aiv-reference-box-portrait')) {
+                    crop = crops.portrait;
+                    aspectRatio = portraitAspectRatio;
+                }
+
+                var move = function(pageX, pageY) {
+                    var x = pageX - referenceBoxOffset.left - pointerOffsetX;
+                    var y = pageY - referenceBoxOffset.top - pointerOffsetY;
+
+                    if (x < 0) x = 0;
+                    else if (x > (crop.referenceBox.width - crop.pixelCrop.width)) x = crop.referenceBox.width - crop.pixelCrop.width;
+
+                    if (y < 0) y = 0;
+                    else if (y > (crop.referenceBox.height - crop.pixelCrop.height)) y = crop.referenceBox.height - crop.pixelCrop.height;
+
+                    if (x != crop.pixelCrop.left || y != crop.pixelCrop.top) {
+                        crop.pixelCrop.left = x;
+                        crop.pixelCrop.top = y;
+
+                        crop.pixelCrop.centerLeft = crop.pixelCrop.left + (crop.pixelCrop.width / 2);
+                        crop.pixelCrop.centerTop = crop.pixelCrop.top + (crop.pixelCrop.height / 2);
+
+                        crop.percentageCrop = crop.percentageCrop || {};
+
+                        toPercentageSpace(crop.pixelCrop, crop.percentageCrop, crop.referenceBox.width, crop.referenceBox.height);
+                        repaint($referenceBox, crop.percentageCrop);
+                    }
+                };
+
+                var resize = function(pageX, pageY) {
+                    var x = (pageX - referenceBoxOffset.left - pointerOffsetX + 6);
+                    var y = (pageY - referenceBoxOffset.top - pointerOffsetY + 6);
+                    var deltaDir, cornerWest, cornerNorth, cornerLeft, cornerTop, oppositeCornerLeft, oppositeCornerTop, cursorAspectRatio, minTop, maxTop, minLeft, maxLeft;
+
+                    if (resizeCorner == 'nw') {
+                        deltaDir = -1;
+                        cornerWest = true;
+                        cornerNorth = true;
+
+                    } else if (resizeCorner == 'ne') {
+                        deltaDir = 1;
+                        cornerWest = false;
+                        cornerNorth = true;
+
+                    } else if (resizeCorner == 'sw') {
+                        deltaDir = 1;
+                        cornerWest = true;
+                        cornerNorth = false;
+
+                    } else if (resizeCorner == 'se') {
+                        deltaDir = -1;
+                        cornerWest = false;
+                        cornerNorth = false;
+                    }
+
+                    // Calculate corner and opposite corner positions
+                    cornerLeft = cornerWest ? crop.pixelCrop.left : crop.pixelCrop.left + crop.pixelCrop.width;
+                    cornerTop = cornerNorth ? crop.pixelCrop.top : crop.pixelCrop.top + crop.pixelCrop.height;
+                    oppositeCornerLeft = cornerWest ? crop.pixelCrop.left + crop.pixelCrop.width : crop.pixelCrop.left;
+                    oppositeCornerTop = cornerNorth ? crop.pixelCrop.top + crop.pixelCrop.height : crop.pixelCrop.top;
+
+                    // Calculate minimum and maximum crop ranges
+                    minLeft = cornerWest ? 0 : oppositeCornerLeft + minCropSize;
+                    maxLeft = cornerWest ? oppositeCornerLeft - minCropSize : referenceBoxWidth;
+                    minTop = cornerNorth ? 0 : oppositeCornerTop + minCropSize;
+                    maxTop = cornerNorth ? oppositeCornerTop - minCropSize : referenceBoxHeight;
+
+                    // Calculate aspect ratio at cursor position
+                    cursorAspectRatio = Math.abs((oppositeCornerLeft - x) / (oppositeCornerTop - y));
+
+                    // Determine if crop should be resized based on cursor x or y position.
+                    if (cursorAspectRatio > aspectRatio) {
+                        if (y < minTop) y = minTop;
+                        else if (y > maxTop) y = maxTop;
+
+                        x = cornerLeft + deltaDir * ((cornerTop - y) * aspectRatio);
+
+                        // Check for x overflows
+                        if (x < minLeft) {
+                            x = minLeft;
+                            y = cornerTop + deltaDir * ((cornerLeft - x) / aspectRatio);
+                        } else if (x > maxLeft) {
+                            x = maxLeft;
+                            y = cornerTop + deltaDir * ((cornerLeft - x) / aspectRatio);
+                        }
+                    } else {
+                        if (x < minLeft) x = minLeft;
+                        else if (x > maxLeft) x = maxLeft;
+
+                        y = cornerTop + deltaDir * ((cornerLeft - x) / aspectRatio);
+
+                        // Check for y overflows
+                        if (y < minTop) {
+                            y = minTop;
+                            x = cornerLeft + deltaDir * ((cornerTop - y) * aspectRatio);
+                        } else if (y > maxTop) {
+                            y = maxTop;
+                            x = cornerLeft + deltaDir * ((cornerTop - y) * aspectRatio);
+                        }
+                    }
+
+                    if (x != cornerLeft || y != cornerTop) {
+                        crop.pixelCrop.width = cornerWest ? oppositeCornerLeft - x : x - oppositeCornerLeft;
+                        crop.pixelCrop.height = cornerNorth ? oppositeCornerTop - y : y - oppositeCornerTop;
+                        crop.pixelCrop.left = cornerWest ? x : crop.pixelCrop.left;
+                        crop.pixelCrop.top = cornerNorth ? y : crop.pixelCrop.top;
+                    }
+
+                    crop.pixelCrop.centerLeft = crop.pixelCrop.left + (crop.pixelCrop.width / 2);
+                    crop.pixelCrop.centerTop = crop.pixelCrop.top + (crop.pixelCrop.height / 2);
+
+                    crop.percentageCrop = crop.percentageCrop || {};
+
+                    toPercentageSpace(crop.pixelCrop, crop.percentageCrop, crop.referenceBox.width, crop.referenceBox.height);
+                    repaint($referenceBox, crop.percentageCrop);
+                };
+
+                $referenceBox.find('.aiv-crop-overlay, .aiv-crop-resize').on('mousedown', function(event) {
+                    pointerOffsetX = event.offsetX;
+                    pointerOffsetY = event.offsetY;
+                    referenceBoxOffset = $referenceBox.offset();
+                    referenceBoxWidth = $referenceBox.width();
+                    referenceBoxHeight = $referenceBox.height();
+                    referenceBoxAspectRatio = referenceBoxWidth / referenceBoxHeight;
+
+                    isMoving = $(this).is('.aiv-crop-overlay');
+
+                    if (isMoving) {
+                        $('body').addClass('aiv-crop-moving');
+                    }
+
+                    isResizing = $(this).is('.aiv-crop-resize');
+
+                    if (isResizing) {
+                        if ($(this).is('.aiv-crop-resize-nw')) resizeCorner = 'nw';
+                        else if ($(this).is('.aiv-crop-resize-ne')) resizeCorner = 'ne';
+                        else if ($(this).is('.aiv-crop-resize-sw')) resizeCorner = 'sw';
+                        else if ($(this).is('.aiv-crop-resize-se')) resizeCorner = 'se';
+
+                        $('body').addClass('aiv-crop-resizing-' + resizeCorner);
+                    }
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
+
+                $('body').on('mouseup', function(event) {
+                    if (isMoving || isResizing) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    isMoving = false;
+                    isResizing = false;
+                    $('body').removeClass('aiv-crop-moving aiv-crop-resizing-nw aiv-crop-resizing-ne aiv-crop-resizing-sw aiv-crop-resizing-se');
+                });
+
+                $('body').on('mousemove', function(event) {
+                    if (isMoving || isResizing) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    isMoving && move(event.pageX, event.pageY);
+                    isResizing && resize(event.pageX, event.pageY);
+                });
+            });
+
+            $('#image-version-selector-button').each(function () {
+                var $button = $(this);
+
+                $button.find('~ ul a').click(function (event) {
+                    event.preventDefault();
+
+                    var $link = $(this);
+
+                    $button.find('.caption').text($link.text());
+                    if ($link.data('size')) {
+                        $('#image-version-width').attr('disabled', 'disabled').val($link.data('size').split('x')[0]);
+                        $('#image-version-height').attr('disabled', 'disabled').val($link.data('size').split('x')[1]);
+                    } else {
+                        $('#image-version-width, #image-version-height').removeAttr('disabled').val('');
+                    }
+                });
+            });
+
+            $('#image-version-selector-generate').click(function() {
+                generateImageVersion();
+            });
+
+            $('#source-image-selector-refresh').click();
+
+        })();
+    </script>
+</body>
+</html>
